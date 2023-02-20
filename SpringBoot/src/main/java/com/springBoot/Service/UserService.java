@@ -52,15 +52,12 @@ public class UserService {
 
     @Transactional
     public UserResponse update (UserRequest userRequest)  {
-        User user = usersRepository.findById(userRequest.getId())
-                .orElseThrow(()-> new ResourceNotFoundException("Id not found"));
-        User newUser = UserFactory.from(userRequest);
-        if(newUser.getUserName() != null && !newUser.getUserName().equals(user.getUserName())) user.setUserName(newUser.getUserName());
-        if(newUser.getPassword() != null && !newUser.getPassword().equals(user.getPassword())) user.setPassword(newUser.getPassword());
-        if(newUser.getSecondPassword() != null && !newUser.getSecondPassword().equals(user.getSecondPassword())) user.setSecondPassword(newUser.getSecondPassword());
-        if(newUser.getEmail() != null && !newUser.getEmail().equals(user.getEmail())) user.setEmail(newUser.getEmail());
-        if(newUser.getRole() != null && !newUser.getRole().equals(user.getRole())) user.setRole(newUser.getRole());
-        return UserResponseFactory.from(usersRepository.save(user));
+        if (userRequest.getId() == null && !usersRepository.existsById(userRequest.getId())){
+            throw new ResourceNotFoundException("Id not found");
+        }
+        User user = UserFactory.from(userRequest);
+        user = usersRepository.save(user);
+        return UserResponseFactory.from(user);
     }
 
     // Crear el Patch para cada Atributo del Entity
