@@ -7,9 +7,10 @@ import com.springBoot.Factories.UserResponseFactory;
 import com.springBoot.Repository.UserRepository;
 import com.springBoot.UserRequest.UserRequest;
 import com.springBoot.UserResponse.UserResponse;
-import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,7 @@ public class UserService {
     public UserResponse deleteById(Long id) {
         User user = usersRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Id not found"));
+        usersRepository.deleteById(id);
        return UserResponseFactory.from(user);
     }
 
@@ -52,11 +54,27 @@ public class UserService {
     public UserResponse update (UserRequest userRequest)  {
         User user = usersRepository.findById(userRequest.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Id not found"));
-        user.setUserName(userRequest.getUserName());
-        user.setPassword(userRequest.getPassword());
-        user.setSecondPassword(userRequest.getSecondPassword());
-        user.setEmail(userRequest.getEmail());
-        user.setRole(userRequest.getRole());
-        return UserResponseFactory.from(user);
+        User newUser = UserFactory.from(userRequest);
+        if(newUser.getUserName() != null && !newUser.getUserName().equals(user.getUserName())) user.setUserName(newUser.getUserName());
+        if(newUser.getPassword() != null && !newUser.getPassword().equals(user.getPassword())) user.setPassword(newUser.getPassword());
+        if(newUser.getSecondPassword() != null && !newUser.getSecondPassword().equals(user.getSecondPassword())) user.setSecondPassword(newUser.getSecondPassword());
+        if(newUser.getEmail() != null && !newUser.getEmail().equals(user.getEmail())) user.setEmail(newUser.getEmail());
+        if(newUser.getRole() != null && !newUser.getRole().equals(user.getRole())) user.setRole(newUser.getRole());
+        return UserResponseFactory.from(usersRepository.save(user));
+    }
+
+    // Crear el Patch para cada Atributo del Entity
+    @Transactional
+    public UserResponse patchUpdate (UserRequest userRequest) {
+        User user = usersRepository.findById(userRequest.getId())
+                .orElseThrow(()-> new ResourceNotFoundException("Id not found"));
+        User newUser = UserFactory.from(userRequest);
+
+        if(newUser.getUserName() != null && !newUser.getUserName().equals(user.getUserName())) user.setUserName(newUser.getUserName());
+        if(newUser.getPassword() != null && !newUser.getPassword().equals(user.getPassword())) user.setPassword(newUser.getPassword());
+        if(newUser.getSecondPassword() != null && !newUser.getSecondPassword().equals(user.getSecondPassword())) user.setSecondPassword(newUser.getSecondPassword());
+        if(newUser.getEmail() != null && !newUser.getEmail().equals(user.getEmail())) user.setEmail(newUser.getEmail());
+        if(newUser.getRole() != null && !newUser.getRole().equals(user.getRole())) user.setRole(newUser.getRole());
+        return UserResponseFactory.from(usersRepository.save(user));
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private UserService usersService;
@@ -25,7 +25,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponse> findById (@PathVariable Long id){
         UserResponse userResponse = usersService.findById(id);
         return ResponseEntity.ok(userResponse);
@@ -42,8 +42,13 @@ public class UserController {
         UserResponse userResponse = usersService.update(userRequest);
         return ResponseEntity.ok(userResponse);
     }
+    @PatchMapping("/patchupdate")
+    public ResponseEntity<UserResponse> patchUpdate (@RequestBody UserRequest userRequest) {
+        UserResponse userResponse = usersService.patchUpdate(userRequest);
+        return ResponseEntity.ok(userResponse);
+    }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<UserResponse> deleteById (@PathVariable Long id) {
        UserResponse userResponse = usersService.deleteById(id);
         return ResponseEntity.ok(userResponse);
