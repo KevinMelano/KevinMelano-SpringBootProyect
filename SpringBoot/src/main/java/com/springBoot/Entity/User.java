@@ -30,7 +30,4 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public User (String userName) {
-        this.userName = userName;
-    }
 }
