@@ -3,25 +3,24 @@ package com.springBoot.UserRequest;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.springframework.lang.NonNull;
 
 @Data
 public class UserRequest {
         @JsonProperty("code")
         private Long id;
-        @NonNull
+
         @JsonProperty("userName")
         private String userName;
-        @NonNull
+
         @JsonProperty("password")
         private String password;
-        @NonNull
+
         @JsonProperty("secondPassword")
         private String secondPassword;
-        @NonNull
+
         @JsonProperty("email")
         private String email;
-        @NonNull
+
         @JsonProperty("role")
         private String role;
 

@@ -29,4 +29,8 @@ public class User implements Serializable {
         this.email = email;
         this.role = role;
     }
+
+    public User (String userName) {
+        this.userName = userName;
+    }
 }

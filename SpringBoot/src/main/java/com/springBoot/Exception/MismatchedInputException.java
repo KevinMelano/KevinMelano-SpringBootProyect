@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 @Getter
 @Setter
-public class ResourceNotFoundException extends RuntimeException {
+public class MismatchedInputException extends RuntimeException{
     private String message;
 
-    public ResourceNotFoundException(String message) {
-        super ();
+    public MismatchedInputException(String message) {
+        super();
         this.message = message;
     }
 }

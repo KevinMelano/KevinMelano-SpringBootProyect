@@ -1,7 +1,8 @@
 package com.springBoot.Controller;
 
+import com.springBoot.Entity.User;
 import com.springBoot.Service.UserService;
-import com.springBoot.UserRequest.UserRequest;
+import com.springBoot.UserRequest.*;
 import com.springBoot.UserResponse.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,12 +43,26 @@ public class UserController {
         UserResponse userResponse = usersService.update(userRequest);
         return ResponseEntity.ok(userResponse);
     }
-    @PatchMapping("/patchupdate")
-    public ResponseEntity<UserResponse> patchUpdate (@RequestBody UserRequest userRequest) {
-        UserResponse userResponse = usersService.patchUpdate(userRequest);
+    @PatchMapping("/updateUserName")
+    public ResponseEntity<UserResponse> updateUserName (@RequestBody UserNameRequest userNameRequest) {
+        UserResponse userResponse = usersService.updateUserName(userNameRequest);
         return ResponseEntity.ok(userResponse);
     }
-
+    @PatchMapping("/updatePassword")
+    public ResponseEntity<UserResponse> updatePassword (@RequestBody PasswordRequest passwordRequest) {
+        UserResponse userResponse = usersService.updatePassword(passwordRequest);
+        return ResponseEntity.ok(userResponse);
+    }
+    @PatchMapping("/updateRole")
+    public ResponseEntity<UserResponse> updateRole (@RequestBody RoleRequest roleRequest) {
+        UserResponse userResponse = usersService.updateRole(roleRequest);
+        return ResponseEntity.ok(userResponse);
+    }
+    @PatchMapping("/updateEmail")
+    public ResponseEntity<UserResponse> updateEmail (@RequestBody EmailRequest emailRequest) {
+        UserResponse userResponse = usersService.updateEmail(emailRequest);
+        return ResponseEntity.ok(userResponse);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<UserResponse> deleteById (@PathVariable Long id) {
        UserResponse userResponse = usersService.deleteById(id);
