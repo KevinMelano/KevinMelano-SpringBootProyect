@@ -1,6 +1,7 @@
 package com.springBoot.Controller;
 
 import com.springBoot.Entity.User;
+import com.springBoot.Exception.ResourceNotFoundException;
 import com.springBoot.Service.UserService;
 import com.springBoot.UserRequest.*;
 import com.springBoot.UserResponse.UserResponse;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController()
 @RequestMapping("/users")
@@ -68,5 +70,12 @@ public class UserController {
        UserResponse userResponse = usersService.deleteById(id);
         return ResponseEntity.ok(userResponse);
     }
-
+    @GetMapping("/login")
+    public ResponseEntity<UserResponse> login (@RequestBody UserLoginRequest userLoginRequest){
+        UserResponse userResponse = usersService.findUserName(userLoginRequest);
+        if (!userResponse.getPassword().equals(userLoginRequest.getPassword())) {
+            throw new ResourceNotFoundException("Invalid password");
+        }
+        return ResponseEntity.ok().build();
+    }
 }
