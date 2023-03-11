@@ -1,5 +1,6 @@
 package com.springBoot.Service;
 
+import com.springBoot.Entity.Student;
 import com.springBoot.Entity.User;
 import com.springBoot.Exception.FormatEmailException;
 import com.springBoot.Exception.MismatchedInputException;
@@ -49,6 +50,8 @@ public class UserService {
     @Transactional
     public UserResponse save (UserRequest userRequest) {
         User user = UserFactory.from(userRequest);
+        Student student = new Student();
+        user.setStudent(student);
         user = usersRepository.save(user);
       return UserResponseFactory.from(user);
     }
