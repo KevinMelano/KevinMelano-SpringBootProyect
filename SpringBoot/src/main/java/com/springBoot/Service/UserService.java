@@ -10,7 +10,9 @@ import com.springBoot.Repository.UserRepository;
 import com.springBoot.UserRequest.*;
 import com.springBoot.UserResponse.UserResponse;
 
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private UserRepository usersRepository;
+
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -108,12 +110,14 @@ public class UserService {
         return matcher.matches();
     }
     public UserResponse findUserName (UserLoginRequest userLoginRequest) {
-        Session session;
-        session = sessionFactory.openSession();
-        Query query = session.createQuery("from User where userName ilike :userName", User.class);
-        query.setParameter("userName",userLoginRequest.getUserName());
-        User user = (User) query.getSingleResult();
-       return UserResponseFactory.from(user);
+        try (Session session = sessionFactory.openSession()){
+            Query query = session.createQuery("from users where userName ilike :userName", User.class);
+            query.setParameter("userName",userLoginRequest.getUserName());
+            User user = (User) query.getSingleResult();
+            return UserResponseFactory.from(user);
+        }catch (NoResultException e){
+            throw new ResourceNotFoundException("Invalid user name");
+        }
     }
 
 }
